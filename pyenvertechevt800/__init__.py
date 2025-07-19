@@ -1,6 +1,4 @@
-"""SMA WebConnect library for Python.
-
-See: http://www.sma.de/en/products/monitoring-control/webconnect.html
+"""EVT-800 devicelibrary for Python.
 
 Source: http://www.github.com/daniel-bergmann-00/pyenvertech-evt800
 """
@@ -109,8 +107,7 @@ class EnvertechEVT800:
 
 
 def parse_poll_message_packet(data: bytes) -> str:
-    """
-    Parsing a poll message packet.
+    """Parsing a poll message packet.
 
     That looks like this: 68001068107732323232000000009f16
     """
@@ -120,8 +117,7 @@ def parse_poll_message_packet(data: bytes) -> str:
 
 
 def parse_data_packet(data: bytes) -> dict[str, Any]:
-    """
-    Parse a data packet from the EVT-800 device.
+    """Parse a data packet from the EVT-800 device.
 
     The packet should be at least 86 bytes long.
     """

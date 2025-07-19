@@ -12,7 +12,7 @@ PyEnvertechEVT800 is available on `pypi`_ and can be installed using pip.
 .. _pypi: https://pypi.org/project/pyenvertechevt800/
 
 
-Create SMA instance
+Create EVT-800 device instance
 *******************
 
 The :class:`~pyenvertechevt800.EnvertechEVT800` class requires an IP Address and a PORT.
@@ -22,7 +22,7 @@ The :class:`~pyenvertechevt800.EnvertechEVT800` class requires an IP Address and
     ip = "127.0.0.1"
     port = "14889"
     
-    sma = pyenvertechevt800.EnvertechEVT800(ip, port)
+    evt800 = pyenvertechevt800.EnvertechEVT800(ip, port)
 
 Complete Example
 ****************
