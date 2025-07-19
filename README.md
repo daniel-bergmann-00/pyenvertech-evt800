@@ -35,7 +35,7 @@ To enable detailed logging in Home Assistant, you can add the following to your 
 logger:
   default: info
   logs:
-    homeassistant.components.sma: debug
+    homeassistant.components.pyenvertechevt800: debug
     pyenvertechevt800: debug
 ```
 ## Technical Info
