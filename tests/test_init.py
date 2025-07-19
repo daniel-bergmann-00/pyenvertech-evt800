@@ -1,6 +1,6 @@
-import pytest
 import asyncio
-import pytest_asyncio
+
+import pytest
 
 from pyenvertechevt800 import (
     EnvertechEVT800,
