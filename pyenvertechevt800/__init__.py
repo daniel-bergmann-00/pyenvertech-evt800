@@ -55,7 +55,7 @@ class EnvertechEVT800:
             "Connecting to EVT800 at %s:%s", self.conn["ip"], self.conn["port"]
         )
         reader, writer = await asyncio.open_connection(
-            self.conn["ip"], self.conn["port"]
+            str(self.conn["ip"]), int(self.conn["port"])
         )
         self.online = True
         if self._unavailable_logged:
