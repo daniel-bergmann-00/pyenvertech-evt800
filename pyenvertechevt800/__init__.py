@@ -16,6 +16,7 @@ class Connection:  # pylint: disable=too-few-public-methods
     """Connection details for the EVT-800 device."""
 
     def __init__(self, ip: str, port: int):
+        """Initialize connection details."""
         self.ip = ip
         self.port = port
 
@@ -24,6 +25,7 @@ class EnvertechEVT800:
     """Class to connect to the Envertech EVT-800 device and read parameters."""
 
     def __init__(self, ip: str, port: int, on_data: Callable[[dict], None]):
+        """Initialize the EVT-800 device connection."""
         self.conn = Connection(ip=ip, port=port)
         self.on_data = on_data
         self.serial_number: str = ""
@@ -109,6 +111,7 @@ class EnvertechEVT800:
 def parse_poll_message_packet(data: bytes) -> str:
     """
     Parsing a poll message packet.
+
     That looks like this: 68001068107732323232000000009f16
     """
     if len(data) != 32:
@@ -119,9 +122,9 @@ def parse_poll_message_packet(data: bytes) -> str:
 def parse_data_packet(data: bytes) -> dict[str, Any]:
     """
     Parse a data packet from the EVT-800 device.
+
     The packet should be at least 86 bytes long.
     """
-
     if len(data) < 86:
         return {}
 
