@@ -1,7 +1,5 @@
 import asyncio
-
 import pytest
-
 from pyenvertechevt800 import (
     EnvertechEVT800,
     bytes_to_u16,
@@ -11,16 +9,14 @@ from pyenvertechevt800 import (
 )
 
 
-class Test_EVT800_class:
+class TestEnvertechEVT800:
     @pytest.mark.asyncio
-    async def test_envertech_evt800_data_package_lifecycle(monkeypatch):
-        # Dummy callback
+    async def test_data_package_lifecycle(self, monkeypatch):
         received = []
 
         def on_data(data):
             received.append(data)
 
-        # Patch asyncio.open_connection to simulate connection
         class DummyReader:
             def __init__(self, packets):
                 self.packets = packets
@@ -45,7 +41,6 @@ class Test_EVT800_class:
                 pass
 
         async def dummy_open_connection(ip, port):
-            # Simulate a valid packet
             packet = bytes.fromhex(
                 "680056681004315258207a007a01000000000000315258207a7a40b02d860000bafb2e8c3c4931fe000000000000000000000000315258217a7a3131017b00000e4a2ab33c4931fe020200000000000000000000ef16"
             )
@@ -81,15 +76,14 @@ class Test_EVT800_class:
         for k, v in expected.items():
             actual = received[0][k]
             if isinstance(v, float):
-                assert abs(actual - v) < 1e-6, (
-                    f"Key '{k}': {actual} != {v} (delta={abs(actual - v)})"
-                )
+                assert (
+                    abs(actual - v) < 1e-6
+                ), f"Key '{k}': {actual} != {v} (delta={abs(actual - v)})"
             else:
                 assert actual == v, f"Key '{k}': {actual} != {v}"
 
     @pytest.mark.asyncio
-    async def test_envertech_evt800_pool_message_lifecycle(monkeypatch):
-        # Patch asyncio.open_connection to simulate connection
+    async def test_pool_message_lifecycle(self, monkeypatch):
         class DummyReader:
             def __init__(self, packets):
                 self.packets = packets
@@ -114,7 +108,6 @@ class Test_EVT800_class:
                 pass
 
         async def dummy_open_connection(ip, port):
-            # Simulate a valid packet
             packet = bytes.fromhex(
                 "680020681006315258200000000000014b0000e7010000010500000000009016"
             )
@@ -132,15 +125,16 @@ class Test_EVT800_class:
         assert evt.online is False
         assert evt.serial_number == "31525820"
 
-    def test_parse_inverter_packet_min_length():
-        # Too short
+
+class TestPacketUtils:
+    def test_parse_inverter_packet_min_length(self):
         assert parse_data_packet(b"\x00" * 10) == {}
 
-    def test_bytes_to_u16_and_u32():
+    def test_bytes_to_u16_and_u32(self):
         assert bytes_to_u16(0x12, 0x34) == 0x1234
         assert bytes_to_u32(0x01, 0x02, 0x03, 0x04) == 0x01020304
 
-    def test_safe_divide():
+    def test_safe_divide(self):
         assert safe_divide(10, 2) == 5
         assert safe_divide(10, 0) == 0
         assert safe_divide(None, 2) == 0
