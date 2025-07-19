@@ -1,10 +1,12 @@
 import asyncio
+
 import pytest
+
 from pyenvertechevt800 import (
     EnvertechEVT800,
-    parse_data_packet,
     bytes_to_u16,
     bytes_to_u32,
+    parse_data_packet,
     safe_divide,
 )
 
@@ -78,9 +80,9 @@ async def test_envertech_evt800_data_package_lifecycle(monkeypatch):
     for k, v in expected.items():
         actual = received[0][k]
         if isinstance(v, float):
-            assert abs(actual - v) < 1e-6, (
-                f"Key '{k}': {actual} != {v} (delta={abs(actual - v)})"
-            )
+            assert (
+                abs(actual - v) < 1e-6
+            ), f"Key '{k}': {actual} != {v} (delta={abs(actual - v)})"
         else:
             assert actual == v, f"Key '{k}': {actual} != {v}"
 
