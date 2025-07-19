@@ -1,5 +1,4 @@
 pytest
 pytest-cov
-pyenvertechevt800
 asyncio
 pytest-github-actions-annotate-failures
