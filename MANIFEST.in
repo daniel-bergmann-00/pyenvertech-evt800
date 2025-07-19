@@ -1,4 +1,4 @@
 include LICENSE README.md
-graft pyevertechevt800
+graft pyenvertechevt800
 graft tests
 recursive-exclude * *.py[co]

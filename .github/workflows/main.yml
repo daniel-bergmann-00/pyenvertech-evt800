@@ -50,7 +50,7 @@ jobs:
           pip install pylint .
       - name: Run Pylint
         run: |
-          pylint pyevertechevt800
+          pylint pyenvertechevt800
 
   mypy:
     name: Check mypy
@@ -65,7 +65,7 @@ jobs:
           pip install mypy .
       - name: Run mypy
         run: |
-          mypy pyevertechevt800/
+          mypy pyenvertechevt800/
 
   pydocstyle:
     name: Check pydocstyle
@@ -105,7 +105,7 @@ jobs:
       - name: Run tests and generate coverage report
         run: |
           pip install -r requirements_test.txt
-          pytest --cov=./pyevertechevt800 --cov-report=xml
+          pytest --cov=./pyenvertechevt800 --cov-report=xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:

@@ -1,7 +1,7 @@
 PyEnvertechEVT800 Main Class
 ================
 
-.. automodule:: pyevertechevt800
+.. automodule:: pyenvertechevt800
    :members:
    :undoc-members:
    :show-inheritance:

@@ -21,10 +21,10 @@ repos:
     rev: v0.961
     hooks:
       - id: mypy
-        files: "pyevertechevt800/.*.py"
+        files: "pyenvertechevt800/.*.py"
         additional_dependencies: [types-attrs]
   - repo: https://github.com/pycqa/pydocstyle
     rev: 6.1.1
     hooks:
       - id: pydocstyle
-        files: "pyevertechevt800/.*.py"
+        files: "pyenvertechevt800/.*.py"

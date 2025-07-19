@@ -1,6 +1,6 @@
-# pyevertechevt800 library
+# pyenvertechevt800 library
 
-[![Workflow Status](https://github.com/daniel-bergmann-00/pyevertechevt800/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/daniel-bergmann-00/pyevertechevt800/actions)
+[![Workflow Status](https://github.com/daniel-bergmann-00/pyenvertechevt800/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/daniel-bergmann-00/pyenvertechevt800/actions)
 
 Envertech EVT800 library for Python 3. The library was created
 to integrate Envertech EVT800 inverters with HomeAssistant
@@ -36,7 +36,7 @@ logger:
   default: info
   logs:
     homeassistant.components.sma: debug
-    pyevertechevt800: debug
+    pyenvertechevt800: debug
 ```
 ## Technical Info
 
