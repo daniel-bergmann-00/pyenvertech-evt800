@@ -6,7 +6,7 @@ Welcome to PyEnvertechEVT800's documentation!
    :caption: Contents:
 
    getting_started
-   pyevertechevt800
+   pyenvertechevt800
    modules
    Home Assistant Documentation <https://www.home-assistant.io/components/TODO>
 

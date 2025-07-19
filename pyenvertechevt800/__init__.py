@@ -2,7 +2,7 @@
 
 See: http://www.sma.de/en/products/monitoring-control/webconnect.html
 
-Source: http://www.github.com/daniel-bergmann-00/pyevertechevt800
+Source: http://www.github.com/daniel-bergmann-00/pyenvertech-evt800
 """
 
 import asyncio
