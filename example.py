@@ -31,9 +31,9 @@ async def main_loop(ip: str, port: int):
     def on_data(data):
         print_table(data)
 
-    print("Initializing device")
+    _LOGGER.debug("Initializing device")
     VAR["device"] = pyenvertechevt800.EnvertechEVT800(ip, port, on_data)
-    print("Starting device")
+    _LOGGER.debug("Starting device")
     VAR["device"].start()
 
 
@@ -57,14 +57,14 @@ async def main():
 
     def _shutdown(*_):
         try:
-            print("Stopping device")
+            _LOGGER.debug("Stopping device")
             VAR["device"].stop()
         except Exception:
             return
 
     signal.signal(signal.SIGINT, _shutdown)
 
-    print("Starting main_loop")
+    _LOGGER.debug("Starting main_loop")
     await main_loop(args.ip, args.port)
 
     if VAR["device"] and VAR["device"]._task:
