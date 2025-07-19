@@ -16,7 +16,7 @@ _LOGGER = logging.getLogger(__name__)
 VAR = {}
 
 
-def print_table(sensors: dict):
+def print_table(sensors: dict) -> None:
     """Print sensors formatted as table."""
     for sen_name, sen_value in sensors.items():
         if sen_value is None:
@@ -25,10 +25,10 @@ def print_table(sensors: dict):
             print("{:>20}{:>25}".format(sen_name, str(sen_value)))
 
 
-async def main_loop(ip: str, port: int):
+async def main_loop(ip: str, port: int) -> None:
     """Run main loop."""
 
-    def on_data(data):
+    def on_data(data: dict) -> None:
         print_table(data)
 
     _LOGGER.debug("Initializing device")
@@ -37,7 +37,7 @@ async def main_loop(ip: str, port: int):
     VAR["device"].start()
 
 
-async def main():
+async def main() -> None:
     """Run example."""
     logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
@@ -55,7 +55,7 @@ async def main():
 
     args = parser.parse_args()
 
-    def _shutdown(*_):
+    def _shutdown(*_) -> None:
         try:
             _LOGGER.debug("Stopping device")
             VAR["device"].stop()
