@@ -16,8 +16,7 @@ class EnvertechEVT800:
     """Class to connect to the Envertech EVT-800 device and read parameters."""
 
     def __init__(self, ip: str, port: int, on_data: Callable[[dict], None]):
-        self.ip: str = ip
-        self.port: int = port
+        self.conn = {"ip": ip, "port": port}
         self.on_data = on_data
         self.serial_number: str = ""
         self._task: Optional[asyncio.Task] = None
@@ -52,13 +51,17 @@ class EnvertechEVT800:
                     await asyncio.sleep(60)
 
     async def _main_loop(self) -> None:
-        _LOGGER.info("Connecting to EVT800 at %s:%s", self.ip, self.port)
-        reader, writer = await asyncio.open_connection(self.ip, self.port)
+        _LOGGER.info(
+            "Connecting to EVT800 at %s:%s", self.conn["ip"], self.conn["port"]
+        )
+        reader, writer = await asyncio.open_connection(
+            self.conn["ip"], self.conn["port"]
+        )
         self.online = True
         if self._unavailable_logged:
             _LOGGER.info("EVT800 is back online")
             self._unavailable_logged = False
-        _LOGGER.info("Connected to EVT800 at %s:%s", self.ip, self.port)
+        _LOGGER.info("Connected to EVT800 at %s:%s", self.conn["ip"], self.conn["port"])
 
         while not self._stop_event.is_set():
             buffer = await asyncio.wait_for(reader.read(86), timeout=60)
@@ -162,5 +165,5 @@ def safe_divide(numerator: float, denominator: float) -> float:
         if numerator is None or denominator in (None, 0):
             return 0
         return numerator / denominator
-    except Exception:
+    except ZeroDivisionError:
         return 0
