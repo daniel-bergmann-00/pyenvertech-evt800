@@ -6,7 +6,7 @@ from pathlib import Path
 from setuptools import setup
 
 VERSION = "0.1.0"
-URL = "https://github.com/daniel-bergmann-00/pyevertechevt800"
+URL = "https://github.com/daniel-bergmann-00/pyenvertech-evt800"
 
 setup(
     name="pyevertechevt800",
