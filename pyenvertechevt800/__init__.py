@@ -26,6 +26,25 @@ class EnvertechEVT800:
         """Initialize the EVT-800 device connection."""
         self.conn = Connection(ip=ip, port=port)
         self.on_data = on_data
+        self.data = {
+            "id_1": None,
+            "id_2": None,
+            "sw_version": None,
+            "input_voltage_1": None,
+            "input_voltage_2": None,
+            "power_1": None,
+            "power_2": None,
+            "ac_voltage_1": None,
+            "ac_voltage_2": None,
+            "ac_frequency_1": None,
+            "ac_frequency_2": None,
+            "temperature_1": None,
+            "temperature_2": None,
+            "total_energy_1": None,
+            "total_energy_2": None,
+            "current_1": None,
+            "current_2": None,
+        }
         self.serial_number: str = ""
         self._task: Optional[asyncio.Task] = None
         self._stop_event = asyncio.Event()
@@ -38,12 +57,56 @@ class EnvertechEVT800:
         self._stop_event.clear()
         self._task = asyncio.create_task(self._run())
 
-    async def stop(self) -> None:
+    def stop(self) -> None:
         """Stop the TCP read task."""
-        _LOGGER.debug("Stopping TCP read task")
+        _LOGGER.debug("Stopping TCP read task...")
         self._stop_event.set()
-        if self._task:
-            await self._task
+
+    async def test_connection(self) -> bool:
+        """Test the connection to the EVT-800 device."""
+        try:
+            reader, writer = await asyncio.open_connection(self.conn.ip, self.conn.port)
+            # Wait up to 60 seconds to receive a valid data package
+            packet = None
+            data = {}
+            try:
+                end_time = asyncio.get_event_loop().time() + 60
+                while asyncio.get_event_loop().time() < end_time:
+                    buffer = await asyncio.wait_for(reader.read(86), timeout=60)
+                    if not buffer:
+                        continue
+
+                    packet = await self.get_packet_from_buffer(buffer)
+                    if not packet:
+                        _LOGGER.warning("No valid packet found in buffer")
+                        continue
+
+                    _LOGGER.debug("Received packet: %s", packet.hex())
+                    if len(packet) == 86:
+                        _LOGGER.debug("Parsing data packet")
+                        data = parse_data_packet(packet)
+                        break
+                    elif len(packet) == 32:
+                        _LOGGER.debug("Parsing poll message packet")
+                        self.serial_number = parse_poll_message_packet(packet)
+                        # Continue waiting for data packet
+                    if packet and len(packet) >= 24:
+                        await self.send_ack(writer, packet)
+                    else:
+                        _LOGGER.warning("Packet too short for ACK, not sent")
+                else:
+                    _LOGGER.warning("Timeout waiting for data packet")
+                    return False
+            except asyncio.TimeoutError:
+                _LOGGER.warning("Timeout waiting for data packet")
+                return False
+
+            if data:
+                self.data = data
+                return True
+            return False
+        except (asyncio.TimeoutError, OSError):
+            return False
 
     async def _run(self) -> None:
         while not self._stop_event.is_set():
@@ -68,17 +131,16 @@ class EnvertechEVT800:
         _LOGGER.info("Connected to EVT800 at %s:%s", self.conn.ip, self.conn.port)
 
         while not self._stop_event.is_set():
+            _LOGGER.debug("Waiting for data from EVT800")
             buffer = await asyncio.wait_for(reader.read(86), timeout=60)
             if not buffer:
                 break
 
-            start = buffer.find(b"\x68\x00")
-            if start == -1:
+            packet = await self.get_packet_from_buffer(buffer)
+            if not packet:
+                _LOGGER.warning("No valid packet found in buffer")
                 continue
-            end = buffer.find(b"\x16", start)
-            if end == -1:
-                continue
-            packet = buffer[start : end + 1]
+
             _LOGGER.debug("Received packet: %s", packet.hex())
             data = {}
             if len(packet) == 86:
@@ -90,20 +152,35 @@ class EnvertechEVT800:
 
             if data:
                 self.on_data(data)
+                self.data = data
 
             # Send ACK
             if len(packet) >= 24:
-                sn = packet[20:24]
-                ack = bytearray([0x68, 0x00, 0x10, 0x68, 0x10, 0x50])
-                ack.extend(sn)
-                ack.extend([0x00, 0x00, 0x00, 0x00, 0x78, 0x16])
-                writer.write(bytes(ack))
-                await writer.drain()
-                _LOGGER.debug("Sent ACK: %s", ack.hex())
+                await self.send_ack(writer, packet)
             else:
                 _LOGGER.warning("Packet too short for ACK, not sent")
 
         self.online = False
+
+    async def get_packet_from_buffer(self, buffer: bytes) -> Optional[bytes]:
+        """Extract a valid packet from the buffer."""
+        start = buffer.find(b"\x68\x00")
+        if start == -1:
+            return None
+        end = buffer.find(b"\x16", start)
+        if end == -1:
+            return None
+        return buffer[start : end + 1]
+
+    async def send_ack(self, writer: asyncio.StreamWriter, packet: bytes) -> None:
+        """Send an ACK packet back to the EVT-800 device."""
+        sn = packet[20:24]
+        ack = bytearray([0x68, 0x00, 0x10, 0x68, 0x10, 0x50])
+        ack.extend(sn)
+        ack.extend([0x00, 0x00, 0x00, 0x00, 0x78, 0x16])
+        writer.write(bytes(ack))
+        await writer.drain()
+        _LOGGER.debug("Sent ACK: %s", ack.hex())
 
 
 def parse_poll_message_packet(data: bytes) -> str:
