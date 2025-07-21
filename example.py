@@ -70,8 +70,8 @@ async def main() -> None:
     _LOGGER.debug("Starting main_loop")
     await main_loop(args.ip, args.port)
 
-    if VAR["device"] and VAR["device"]._task:
-        await VAR["device"]._task
+    if VAR["device"] and VAR["device"]._task.task:
+        await VAR["device"]._task.task
 
 
 if __name__ == "__main__":
