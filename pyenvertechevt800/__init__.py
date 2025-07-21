@@ -19,12 +19,12 @@ class Connection:  # pylint: disable=too-few-public-methods
         self.port = port
 
 
-class EVT800Task:
+class EVT800Task:  # pylint: disable=too-few-public-methods
     """Manage the background task for reading data from the EVT-800 device."""
 
     def __init__(self) -> None:
         """Initialize the task with the EVT-800 instance."""
-        self._stop_event = asyncio.Event()
+        self.stop_event = asyncio.Event()
         self.task: Optional[asyncio.Task] = None
 
 
@@ -62,13 +62,13 @@ class EnvertechEVT800:
     def start(self) -> None:
         """Start the background TCP read task."""
         _LOGGER.debug("Starting TCP read task")
-        self._task._stop_event.clear()
+        self._task.stop_event.clear()
         self._task.task = asyncio.create_task(self._run())
 
     def stop(self) -> None:
         """Stop the TCP read task."""
         _LOGGER.debug("Stopping TCP read task...")
-        self._task._stop_event.set()
+        self._task.stop_event.set()
 
     async def test_connection(self) -> bool:
         """Test the connection to the EVT-800 device."""
@@ -85,19 +85,20 @@ class EnvertechEVT800:
                         continue
 
                     packet = await self.get_packet_from_buffer(buffer)
+
                     if not packet:
                         _LOGGER.warning("No valid packet found in buffer")
                         continue
 
                     _LOGGER.debug("Received packet: %s", packet.hex())
+
                     if len(packet) == 86:
                         _LOGGER.debug("Parsing data packet")
                         data = parse_data_packet(packet)
-                        break
                     elif len(packet) == 32:
                         _LOGGER.debug("Parsing poll message packet")
                         self.serial_number = parse_poll_message_packet(packet)
-                        # Continue waiting for data packet
+
                     if packet and len(packet) >= 24:
                         await self.send_ack(writer, packet)
                     else:
@@ -117,7 +118,7 @@ class EnvertechEVT800:
             return False
 
     async def _run(self) -> None:
-        while not self._task._stop_event.is_set():
+        while not self._task.stop_event.is_set():
             try:
                 await self._main_loop()
             except (asyncio.TimeoutError, OSError) as ex:
@@ -125,7 +126,7 @@ class EnvertechEVT800:
                 if not self._unavailable_logged:
                     _LOGGER.warning("EVT800 unavailable: %s", ex)
                     self._unavailable_logged = True
-                if not self._task._stop_event.is_set():
+                if not self._task.stop_event.is_set():
                     _LOGGER.debug("Retrying connection in %s seconds...", 60)
                     await asyncio.sleep(60)
 
@@ -138,7 +139,7 @@ class EnvertechEVT800:
             self._unavailable_logged = False
         _LOGGER.info("Connected to EVT800 at %s:%s", self.conn.ip, self.conn.port)
 
-        while not self._task._stop_event.is_set():
+        while not self._task.stop_event.is_set():
             _LOGGER.debug("Waiting for data from EVT800")
             buffer = await asyncio.wait_for(reader.read(86), timeout=60)
             if not buffer:
