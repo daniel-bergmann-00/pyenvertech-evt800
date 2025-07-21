@@ -103,9 +103,6 @@ class EnvertechEVT800:
                         await self.send_ack(writer, packet)
                     else:
                         _LOGGER.warning("Packet too short for ACK, not sent")
-                else:
-                    _LOGGER.warning("Timeout waiting for data packet")
-                    return False
             except asyncio.TimeoutError:
                 _LOGGER.warning("Timeout waiting for data packet")
                 return False
