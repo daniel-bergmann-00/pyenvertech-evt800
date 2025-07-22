@@ -71,7 +71,7 @@ class EnvertechEVT800:
         _LOGGER.debug("Stopping TCP read task...")
         self._task.stop_event.set()
 
-    async def test_connection(self, timeout=60) -> bool:
+    async def test_connection(self, timeout: int = 60) -> bool:
         """Test the connection to the EVT-800 device."""
         try:
             reader, writer = await asyncio.open_connection(self.conn.ip, self.conn.port)
