@@ -71,7 +71,8 @@ class EnvertechEVT800:
         """Stop the TCP read task."""
         _LOGGER.debug("Stopping TCP read task...")
         self._task.stop_event.set()
-        self._task.task.cancel("Stopping EVT-800")
+        if self._task.task is not None:
+            self._task.task.cancel("Stopping EVT-800")
 
     async def test_connection(self, timeout: int = 60) -> bool:
         """Test the connection to the EVT-800 device."""
