@@ -5,7 +5,7 @@ from pathlib import Path
 
 from setuptools import setup
 
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 URL = "https://github.com/daniel-bergmann-00/pyenvertech-evt800"
 
 setup(
