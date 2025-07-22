@@ -1,4 +1,5 @@
 import asyncio
+import time
 
 import pytest
 
@@ -58,7 +59,7 @@ class TestEnvertechEVT800:
         assert evt.online is False
         assert received
         expected = {
-            "timestamp": pytest.approx(asyncio.get_event_loop().time(), rel=3),
+            "timestamp": pytest.approx(round(time.time() * 1000), rel=3),
             "id_1": 49828832,
             "id_2": None,
             "sw_version": "7A.7A",
@@ -137,7 +138,7 @@ class TestEnvertechEVT800:
         assert evt.online is False
         assert received
         expected = {
-            "timestamp": pytest.approx(asyncio.get_event_loop().time(), rel=3),
+            "timestamp": pytest.approx(round(time.time() * 1000), rel=3),
             "id_1": 49828832,
             "id_2": 49828833,
             "sw_version": "7A.7A",

@@ -5,6 +5,7 @@ Source: http://www.github.com/daniel-bergmann-00/pyenvertech-evt800
 
 import asyncio
 import logging
+import time
 from typing import Any, Callable, Optional
 
 _LOGGER = logging.getLogger(__name__)
@@ -36,7 +37,7 @@ class EnvertechEVT800:
         self.conn = Connection(ip=ip, port=port)
         self.on_data = on_data
         self.data = {
-            "timestamp": asyncio.get_event_loop().time(),
+            "timestamp": round(time.time() * 1000),  # Use current time in milliseconds
             "id_1": None,
             "id_2": None,
             "sw_version": None,
@@ -225,7 +226,9 @@ def parse_data_packet(data: bytes) -> dict[str, Any]:
         return {}
 
     result: dict[str, Any] = {}
-    result["timestamp"] = asyncio.get_event_loop().time()
+    result["timestamp"] = (
+        round(time.time() * 1000),
+    )  # Use current time in milliseconds
     result["id_1"] = data[20] * 1000000 + data[21] * 10000 + data[22] * 100 + data[23]
     # Extract sw_version (firmware) from packet, e.g. bytes 24-25 (typical for EVT800)
     result["sw_version"] = f"{data[24]:02X}.{data[25]:02X}"
