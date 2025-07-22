@@ -71,6 +71,7 @@ class EnvertechEVT800:
         """Stop the TCP read task."""
         _LOGGER.debug("Stopping TCP read task...")
         self._task.stop_event.set()
+        self._task.task.cancel("Stopping EVT-800")
 
     async def test_connection(self, timeout: int = 60) -> bool:
         """Test the connection to the EVT-800 device."""
@@ -106,14 +107,14 @@ class EnvertechEVT800:
                 _LOGGER.warning("Timeout waiting for data packet")
                 return False
             return False
-        except (asyncio.TimeoutError, OSError):
+        except (asyncio.TimeoutError, OSError, asyncio.CancelledError):
             return False
 
     async def _run(self) -> None:
         while not self._task.stop_event.is_set():
             try:
                 await self._main_loop()
-            except (asyncio.TimeoutError, OSError) as ex:
+            except (asyncio.TimeoutError, OSError, asyncio.CancelledError) as ex:
                 self.online = False
                 self.reset_data()
                 if not self._unavailable_logged:
