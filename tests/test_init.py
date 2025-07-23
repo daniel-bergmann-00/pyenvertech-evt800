@@ -151,8 +151,8 @@ class TestEnvertechEVT800:
             "temperature_2": 45.3984375,
             "total_energy_1": 5.8431396484375,
             "total_energy_2": 0.446533203125,
-            "current_1": 0.7551351001101536,
-            "current_2": 0.024557765826475734,
+            "current_1": 5.629951690821256,
+            "current_2": 0.24076868101326135,
         }
         for k, v in expected.items():
             actual = received[0][k]

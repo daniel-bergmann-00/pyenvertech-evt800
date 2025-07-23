@@ -37,7 +37,9 @@ class EnvertechEVT800:
         self.conn = Connection(ip=ip, port=port)
         self.on_data = on_data
         self.data = {
-            "timestamp": round(time.time() * 1000),  # Use current time in milliseconds
+            "timestamp": int(
+                round(time.time() * 1000)
+            ),  # Use current time in milliseconds
             "id_1": None,
             "id_2": None,
             "sw_version": None,
@@ -228,7 +230,7 @@ def parse_data_packet(data: bytes) -> dict[str, Any]:
         return {}
 
     result: dict[str, Any] = {}
-    result["timestamp"] = (
+    result["timestamp"] = int(
         round(time.time() * 1000),
     )  # Use current time in milliseconds
     result["id_1"] = data[20] * 1000000 + data[21] * 10000 + data[22] * 100 + data[23]
@@ -243,7 +245,7 @@ def parse_data_packet(data: bytes) -> dict[str, Any]:
         bytes_to_u32(data[30], data[31], data[32], data[33]) * 4 / 32768
     )
     # Extra data
-    result["current_1"] = safe_divide(result["power_1"], result["ac_voltage_1"])
+    result["current_1"] = safe_divide(result["power_1"], result["input_voltage_1"])
 
     if len(data) > 71:
         result["id_2"] = (
@@ -259,7 +261,7 @@ def parse_data_packet(data: bytes) -> dict[str, Any]:
 
         result["temperature_2"] = (bytes_to_u16(data[66], data[67]) * 256 / 32768) - 40
         # Extra data
-        result["current_2"] = safe_divide(result["power_2"], result["ac_voltage_2"])
+        result["current_2"] = safe_divide(result["power_2"], result["input_voltage_2"])
     else:
         result["id_2"] = None
         result["total_energy_2"] = None
