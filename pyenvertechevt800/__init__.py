@@ -149,7 +149,7 @@ class EnvertechEVT800:
 
             _LOGGER.debug("Received packet: %s", packet.hex())
             data = {}
-            if len(packet) >= 39:
+            if len(packet) >= 38:
                 _LOGGER.debug("Parsing data packet")
                 data = parse_data_packet(packet)
             elif len(packet) == 32:
