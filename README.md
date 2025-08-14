@@ -19,15 +19,15 @@ The Home Assistant Envertech EVT800 documentation can be found
 
 > ---
 >
-> **This library uses the TCP-Server of the EVT-800 device.**
-> 
-> **If you can access your EVT-800 via your browser, this might work for you.**
+> **This library uses the TCP-Server of the EVT800 device.**
+>
+> **If you can access your EVT800 via your browser, this might work for you.**
 >
 > ---
 
 ### How to debug this addon
 
-1. Ensure you can access your EVT-800 from your browser
+1. Ensure you can access your EVT800 from your browser
 
 To enable detailed logging in Home Assistant, you can add the following to your configuration
 
@@ -38,6 +38,7 @@ logger:
     homeassistant.components.pyenvertechevt800: debug
     pyenvertechevt800: debug
 ```
+
 ## Technical Info
 
-see: https://github.com/brandon1024/OpenEVT
+see: [OpenEVT](https://github.com/brandon1024/OpenEVT)

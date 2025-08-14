@@ -194,21 +194,19 @@ class EnvertechEVT800:
 
     def reset_data(self) -> None:
         """Reset the data dictionary to its initial state."""
-        self.data["input_voltage_1"] = None
-        self.data["input_voltage_2"] = None
-        self.data["power_1"] = None
-        self.data["power_2"] = None
+        self.data["input_voltage_1"] = 0
+        self.data["input_voltage_2"] = 0
+        self.data["power_1"] = 0
+        self.data["power_2"] = 0
         self.data["ac_voltage_1"] = None
         self.data["ac_voltage_2"] = None
         self.data["ac_frequency_1"] = None
         self.data["ac_frequency_2"] = None
         self.data["temperature_1"] = None
         self.data["temperature_2"] = None
-        self.data["total_energy_1"] = None
-        self.data["total_energy_2"] = None
         # Extra data
-        self.data["current_1"] = None
-        self.data["current_2"] = None
+        self.data["current_1"] = 0
+        self.data["current_2"] = 0
 
 
 def parse_poll_message_packet(data: bytes) -> str:
