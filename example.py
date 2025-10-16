@@ -53,7 +53,8 @@ async def main() -> None:
         print_table(data)
 
     _LOGGER.debug("Initializing device")
-    VAR["device"] = pyenvertechevt800.EnvertechEVT800(args.ip, args.port, on_data)
+    VAR["device"] = pyenvertechevt800.EnvertechEVT800(args.ip, args.port)
+    VAR["device"].set_data_listener(on_data)
 
     def _shutdown(*_: Any) -> None:
         _LOGGER.debug("Stopping device")

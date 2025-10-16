@@ -32,10 +32,9 @@ class EVT800Task:  # pylint: disable=too-few-public-methods
 class EnvertechEVT800:
     """Class to connect to the Envertech EVT-800 device and read parameters."""
 
-    def __init__(self, ip: str, port: int, on_data: Callable[[dict], None]):
+    def __init__(self, ip: str, port: int):
         """Initialize the EVT-800 device connection."""
         self.conn = Connection(ip=ip, port=port)
-        self.on_data = on_data
         self.data = {
             "timestamp": int(
                 round(time.time() * 1000)
@@ -62,6 +61,9 @@ class EnvertechEVT800:
         self._task: EVT800Task = EVT800Task()
         self.online = False
         self._unavailable_logged = False
+
+    def set_data_listener(self, listener: Callable[[dict], None]):
+        self.on_data = listener
 
     def start(self) -> None:
         """Start the background TCP read task."""
@@ -160,7 +162,8 @@ class EnvertechEVT800:
                 self.reset_data()
 
             if data:
-                self.on_data(data.copy())
+                if self.on_data:
+                    self.on_data(data.copy())
                 self.data = data
 
             # Send ACK

@@ -5,7 +5,7 @@ from pathlib import Path
 
 from setuptools import setup
 
-VERSION = "0.2.3"
+VERSION = "0.2.4"
 URL = "https://github.com/daniel-bergmann-00/pyenvertech-evt800"
 
 setup(
@@ -17,7 +17,7 @@ setup(
     url=URL,
     download_url="{}/tarball/{}".format(URL, VERSION),
     author="Daniel Bergmann",
-    author_email="daniel.bergmann00+evertec_evt800@gmail.com",
+    author_email="daniel.bergmann00+envertec_evt800@gmail.com",
     license="MIT",
     packages=["pyenvertechevt800"],
     python_requires=">=3.9",
