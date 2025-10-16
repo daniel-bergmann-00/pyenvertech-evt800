@@ -35,7 +35,7 @@ class EnvertechEVT800:
     def __init__(self, ip: str, port: int):
         """Initialize the EVT-800 device connection."""
         self.conn = Connection(ip=ip, port=port)
-        self.on_data: Callable[[dict], None] | None = None
+        self.on_data: Optional[Callable[[dict], None]] = None
         self.data = {
             "timestamp": int(
                 round(time.time() * 1000)
