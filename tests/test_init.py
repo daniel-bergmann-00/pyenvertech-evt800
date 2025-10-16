@@ -50,7 +50,8 @@ class TestEnvertechEVT800:
 
         monkeypatch.setattr(asyncio, "open_connection", dummy_open_connection)
 
-        evt = EnvertechEVT800("127.0.0.1", 1234, on_data)
+        evt = EnvertechEVT800("127.0.0.1", 1234)
+        evt.set_data_listener(on_data)
         evt.start()
         await asyncio.sleep(0.05)
         evt.stop()
@@ -128,7 +129,8 @@ class TestEnvertechEVT800:
 
         monkeypatch.setattr(asyncio, "open_connection", dummy_open_connection)
 
-        evt = EnvertechEVT800("127.0.0.1", 1234, on_data)
+        evt = EnvertechEVT800("127.0.0.1", 1234)
+        evt.set_data_listener(on_data)
         evt.start()
         await asyncio.sleep(0.05)
         evt.stop()
@@ -157,9 +159,9 @@ class TestEnvertechEVT800:
         for k, v in expected.items():
             actual = received[0][k]
             if isinstance(v, float):
-                assert (
-                    abs(actual - v) < 1e-6
-                ), f"Key '{k}': {actual} != {v} (delta={abs(actual - v)})"
+                assert abs(actual - v) < 1e-6, (
+                    f"Key '{k}': {actual} != {v} (delta={abs(actual - v)})"
+                )
             else:
                 assert actual == v, f"Key '{k}': {actual} != {v}"
 
@@ -199,7 +201,8 @@ class TestEnvertechEVT800:
         def on_data(data):
             return
 
-        evt = EnvertechEVT800("127.0.0.1", 1234, on_data)
+        evt = EnvertechEVT800("127.0.0.1", 1234)
+        evt.set_data_listener(on_data)
         evt.start()
         await asyncio.sleep(0.05)
         evt.stop()
