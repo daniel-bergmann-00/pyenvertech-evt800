@@ -35,6 +35,7 @@ class EnvertechEVT800:
     def __init__(self, ip: str, port: int):
         """Initialize the EVT-800 device connection."""
         self.conn = Connection(ip=ip, port=port)
+        self.on_data: Callable[[dict], None] = None
         self.data = {
             "timestamp": int(
                 round(time.time() * 1000)
@@ -62,7 +63,8 @@ class EnvertechEVT800:
         self.online = False
         self._unavailable_logged = False
 
-    def set_data_listener(self, listener: Callable[[dict], None]):
+    def set_data_listener(self, listener: Callable[[dict], None]) -> None:
+        """Sets a listener that will be called if new data was received"""
         self.on_data = listener
 
     def start(self) -> None:
